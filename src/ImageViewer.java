@@ -25,6 +25,7 @@ public class ImageViewer{
     // with the image attached on it.
     private final String filename;
     private final ArrayList<Integer> dimensionsOfImage = new ArrayList<Integer>(2);
+    private ArrayList<Integer> dimensionsOfApp = new ArrayList<Integer>(2);
 
     public void displayImage(){
         //loading the image
@@ -35,11 +36,24 @@ public class ImageViewer{
         dimensionsOfImage.add(image.getHeight(null)); //calculating height
 
         JFrame frame = new JFrame(); // create a new frame
-        ImagePanel panel = new ImagePanel(image); // create a new panel
+        if(dimensionsOfImage.get(0) > 1000 && dimensionsOfImage.get(1) > 1000)
+        {
+            //this part of the code fits the image in the JPanel while keeping the aspect ratio
+            int targetWidth = 900;
+            double aspectRatio = (double)dimensionsOfImage.get(0) / (double)dimensionsOfImage.get(1);
+            int targetHeight = (int)(targetWidth / aspectRatio);
+            image = image.getScaledInstance(targetWidth, targetHeight, Image.SCALE_SMOOTH);
+            dimensionsOfApp.add(1000);
+            dimensionsOfApp.add(1000);
+        }else{
+            dimensionsOfApp.add(dimensionsOfImage.get(0));
+            dimensionsOfApp.add(dimensionsOfImage.get(1));
+        }
 
+        ImagePanel panel = new ImagePanel(image); // create a new image panel
         //setting sized to both JFrame and JPanel
-        panel.setMinimumSize(new Dimension(dimensionsOfImage.get(0),dimensionsOfImage.get(1)));
-        frame.setMinimumSize(new Dimension(dimensionsOfImage.get(0), dimensionsOfImage.get(1)));
+        panel.setMinimumSize(new Dimension(dimensionsOfApp.get(0),dimensionsOfApp.get(1)));
+        frame.setMinimumSize(new Dimension(dimensionsOfApp.get(0), dimensionsOfApp.get(1)));
 
         //panel settings
         panel.setBackground(Color.DARK_GRAY);
